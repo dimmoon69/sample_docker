@@ -1,33 +1,31 @@
+import environs
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import environs as environs
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 env = environs.Env()
-env.read_env(BASE_DIR / ".env")
+env.read_env()
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+SECRET_KEY = env.str('DJANGO_SECRET_KEY', '$+po7h84^rk29ds-=yhq0wrfjr3)4^gv6j0n4v7f7h3ju3!+8t')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("DJANGO_SECRET_KEY")
-DEBUG = env.bool("DJANGO_DEBUG")
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env.bool('DJANGO_DEBUG', True)
 
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', ['*', ])
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Django core apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # 3rd party apps
     # custom apps
-    'backend.users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -40,13 +38,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = '_project_.urls'
+ROOT_URLCONF = '_project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -59,8 +56,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = '_project_.wsgi.application'
+WSGI_APPLICATION = '_project.wsgi.application'
 
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env.str('POSTGRES_DB', 'postgres'),
+        'USER': env.str('POSTGRES_USER', 'postgres'),
+        'PASSWORD': env.str('POSTGRES_PASSWORD', ''),
+        'HOST': env.str('DJANGO_POSTGRES_HOST', 'localhost'),
+        'PORT': env.int('DJANGO_POSTGRES_PORT', 5432),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -80,18 +90,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

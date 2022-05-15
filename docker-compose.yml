@@ -1,0 +1,62 @@
+version: "3.7"
+
+services:
+  sample-db:
+    image: postgres:12-alpine
+    container_name: sample-db
+    restart: always
+    volumes:
+      - sample_db_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - .env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+
+  sample-redis:
+    image: redis:latest
+    container_name: sample-redis
+    command: [ 'redis-server', '/etc/redis/redis.conf' ]
+    restart: always
+    volumes:
+      - ./_configs/redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  sample-web:
+    build:
+      context: .
+      dockerfile: ./_configs/web/Dockerfile
+    command: [ 'bash', './start.sh' ]
+    restart: always
+    env_file:
+      - .env
+    environment:
+      WAIT-HOSTS: sample-db, sample-redis
+    volumes:
+      - ./web:/home/app/sample
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - sample-db
+      - sample-redis
+
+  sample-nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./static:/media/static_files:ro
+      - ./media:/media/media_files:ro
+
+
+volumes:
+  sample_db_data:
+
+
+networks:
+  sample-net:
+    external: true
