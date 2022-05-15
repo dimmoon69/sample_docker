@@ -12,10 +12,11 @@ jobs:
 
     steps:
       - name: Show folder all files and execute command
-        uses: appleboy/ssh-action@master
+        uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: ls -al
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          command: |
+            ls -al
+            
