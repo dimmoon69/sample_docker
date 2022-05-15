@@ -29,7 +29,6 @@ services:
       context: .
       dockerfile: ./_configs/web/Dockerfile
     command: [ 'bash', './start.sh' ]
-    container_name: sample-web:latest
     restart: always
     env_file:
       - .env
@@ -38,7 +37,7 @@ services:
     volumes:
       - ./web:/home/app/sample
     ports:
-      - "127.0.0.1:8000:8000"
+      - "8000:8000"
     depends_on:
       - sample-db
       - sample-redis
@@ -50,16 +49,14 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./static:/media/static_files:ro
-      - ./media:/media/media_files:ro
+      - ./web/static:/media/static_files:ro
+      - ./web/media:/media/media_files:ro
     depends_on:
       - sample-web
 
 
-
 volumes:
   sample_db_data:
-
 
 networks:
   sample-net:
