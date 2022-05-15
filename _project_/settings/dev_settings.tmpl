@@ -1,0 +1,9 @@
+import os
+from .const_settings import BASE_DIR
+
+DEBUG = True
+
+if DEBUG:
+    STATIC_URL = 'static/'
+    STATIC_ROOT = BASE_DIR.parent / 'staticfiles'
+    STATICFILES_DIRS = [BASE_DIR.parent / 'static']
