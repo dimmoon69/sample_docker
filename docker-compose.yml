@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: ./_configs/web/Dockerfile
     command: [ 'bash', './start.sh' ]
-    container_name: sample-web:latest
+    container_name: sample-web
     restart: always
     env_file:
       - .env
@@ -52,6 +52,7 @@ services:
     volumes:
       - ./static:/media/static_files:ro
       - ./media:/media/media_files:ro
+      - ./_configs/nginx/sample.conf:/etc/nginx/conf.d/sample.conf
     depends_on:
       - sample-web
 
