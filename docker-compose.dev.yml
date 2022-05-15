@@ -43,7 +43,7 @@ services:
       - sample-redis
 
   sample-nginx:
-    image: nginx:latest
+    image: nginx:alpine
     restart: unless-stopped
     ports:
       - "80:80"
@@ -51,6 +51,7 @@ services:
     volumes:
       - ./web/static:/media/static_files:ro
       - ./web/media:/media/media_files:ro
+      - ./_configs/nginx/dev-sample.conf:/etc/nginx/conf.d/dev-sample.conf
     depends_on:
       - sample-web
 
