@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Connect to server for deploy
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          user: ${{ secrets.USER }}
+          user: root
           key: ${{ secrets.PRIVATE_KEY }}
           command: |
             ls -al
